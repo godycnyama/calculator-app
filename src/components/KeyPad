@@ -1,0 +1,11 @@
+import React from 'react';
+
+const KeyPad = ({ value }) => {
+  return (
+    <div className="key-pad">
+      {value}
+    </div>
+  );
+};
+
+export default KeyPad;
