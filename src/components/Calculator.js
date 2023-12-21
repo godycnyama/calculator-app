@@ -39,23 +39,6 @@ const Calculator = () => {
 
     let result = eval(dis);
     setCdisplay(`${dis}=${result}`);
-    // let str = cdisplay;
-    // for(let i = 0; i < str.length; i++) {
-    //   if(str[i] === '+') {
-    //     let left = str.slice(0, i);
-    //     let right = str.slice(i + 1);
-    //     let result = Number(left) + Number(right);
-    //     setCdisplay(`${cdisplay}=${result}`);
-    //     break;
-    //   }
-    //   if(str[i] === '-') {
-    //     let left = str.slice(0, i);
-    //     let right = str.slice(i + 1);
-    //     let result = Number(left) - Number(right);
-    //     setCdisplay(`${cdisplay}=${result}`);
-    //     break;
-    //   }
-  
   }
 
   const add = () => {
