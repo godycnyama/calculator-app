@@ -9,10 +9,11 @@ const Calculator = () => {
   const [history, setHistory] = useState([]);
   const [runningTotal, setRunningTotal] = useState(0);
   const [calculations, setCalculations] = useState([]);
+  let  lastKey = '';
   
   const deleteLast = () => {
-    let dis = cdisplay.toString();
-    if(dis.length === 1) {
+    let dis = cdisplay?.toString();
+    if(dis?.length === 1) {
       setCdisplay('0');
     } else {
       setCdisplay(dis.slice(0, -1));
@@ -33,35 +34,51 @@ const Calculator = () => {
   }
 
   const calculate = () => {
-    let str = cdisplay;
-    for(let i = 0; i < str.length; i++) {
-      if(str[i] === '+') {
-        let left = str.slice(0, i);
-        let right = str.slice(i + 1);
-        let result = Number(left) + Number(right);
-        setCdisplay(`${cdisplay}=${result}`);
-        break;
-      }
-      if(str[i] === '-') {
-        let left = str.slice(0, i);
-        let right = str.slice(i + 1);
-        let result = Number(left) - Number(right);
-        setCdisplay(`${cdisplay}=${result}`);
-        break;
-      }
-    }
+    let dis = cdisplay.toString();
+    dis = dis.replace(/^0+/, '');
 
+    let result = eval(dis);
+    setCdisplay(`${dis}=${result}`);
+    // let str = cdisplay;
+    // for(let i = 0; i < str.length; i++) {
+    //   if(str[i] === '+') {
+    //     let left = str.slice(0, i);
+    //     let right = str.slice(i + 1);
+    //     let result = Number(left) + Number(right);
+    //     setCdisplay(`${cdisplay}=${result}`);
+    //     break;
+    //   }
+    //   if(str[i] === '-') {
+    //     let left = str.slice(0, i);
+    //     let right = str.slice(i + 1);
+    //     let result = Number(left) - Number(right);
+    //     setCdisplay(`${cdisplay}=${result}`);
+    //     break;
+    //   }
+  
   }
 
   const add = () => {
+    lastKey = '+';
     setCdisplay(cdisplay + '+');
   }
 
   const subtract = () => {
+    lastKey = '-';
     setCdisplay(cdisplay + '-');
   }
 
   const equals = () => {
+    lastKey = '=';
+    if(cdisplay[cdisplay.length - 1] === '+' || cdisplay[cdisplay.length - 1] === '-') {
+      return;
+    }
+    if(cdisplay.toString().includes('=')) {
+      return;
+    }
+    if(cdisplay.length === 1){
+      return;
+    }
     calculate();
   }
 
@@ -74,6 +91,11 @@ const Calculator = () => {
   }
 
   const handleNumberEvent = (data) => {
+    console.log(lastKey);
+    if(lastKey === '=') {
+      return;
+    }
+    lastKey = data;
     if(cdisplay === '0') {
       setCdisplay(data);
     } else {
@@ -104,7 +126,7 @@ const Calculator = () => {
       <Button variant="contained" id="2" onClick={() => handleNumberEvent(2)}>2</Button>
       <Button variant="contained" id="3" onClick={() => handleNumberEvent(3)}>3</Button>
       <Button variant="contained" id="backspace" onClick={deleteLast}><BackspaceIcon/></Button>
-      <Button variant="contained" id="zero">0</Button>
+      <Button variant="contained" id="zero" onClick={() => handleNumberEvent(0)}>0</Button>
       <Button variant="contained" id="dot">.</Button>
       <Button variant="contained" id="equal" onClick={equals}>=</Button>
     </div>
