@@ -6,11 +6,20 @@ import BackspaceIcon from '@mui/icons-material/Backspace';
 
 const Calculator = () => {
   const [cdisplay, setCdisplay] = useState('0');
-  const [history, setHistory] = useState([]);
-  const [runningTotal, setRunningTotal] = useState(0);
   const [calculations, setCalculations] = useState([]);
   let  lastKey = '';
   
+  const setHistory = () => {
+    if(calculations.length >= 2) {
+      let temp = [...calculations];
+      temp.shift();
+      temp.push(cdisplay);
+      setCalculations(temp);
+    } else {
+      setCalculations([...calculations, cdisplay]);
+    }
+  }
+
   const deleteLast = () => {
     let dis = cdisplay?.toString();
     if(dis?.length === 1) {
@@ -21,16 +30,9 @@ const Calculator = () => {
   }
 
   const clear = () => {
-    if(calculations.length >= 2) {
-      let temp = [...calculations];
-      temp.shift();
-      temp.push(cdisplay);
-      setCalculations(temp);
-      console.log(calculations);
-    } else {
-      setCalculations([...calculations, cdisplay]);
-    }
+    setHistory();
     setCdisplay('0');
+    lastKey = '';
   }
 
   const calculate = () => {
@@ -42,13 +44,68 @@ const Calculator = () => {
   }
 
   const add = () => {
+    let dis = cdisplay.toString();
+    let index = dis.search("=");
+    if(index > -1){
+      let result = dis.substring(index + 1) ;
+      setHistory();
+      setCdisplay(result + '+');
+      return;
+    }
     lastKey = '+';
     setCdisplay(cdisplay + '+');
   }
 
   const subtract = () => {
+    let dis = cdisplay.toString();
+    let index = dis.search("=");
+    if(index > -1){
+      let result = dis.substring(index + 1) ;
+      setHistory();
+      setCdisplay(result + '-');
+      return;
+    }
     lastKey = '-';
     setCdisplay(cdisplay + '-');
+  }
+
+  const multiply = () => {
+    let dis = cdisplay.toString();
+    let index = dis.search("=");
+    if(index > -1){
+      let result = dis.substring(index + 1) ;
+      setHistory();
+      setCdisplay(result + '*');
+      return;
+    }
+    lastKey = '*';
+    setCdisplay(cdisplay + '*');
+  }
+
+  const divide = () => {
+    let dis = cdisplay.toString();
+    let index = dis.search("=");
+    if(index > -1){
+      let result = dis.substring(index + 1) ;
+      setHistory();
+      setCdisplay(result + '/');
+      return;
+    }
+    lastKey = '/';
+    setCdisplay(cdisplay + '/');
+  }
+
+  const dot = () => {
+    let dis = cdisplay.toString();
+    let index = dis.search("=");
+    if(index > -1){
+      let result = dis.substring(index + 1) ;
+      setHistory();
+      setCdisplay(result);
+      return;
+    }
+    lastKey = '.';
+    setCdisplay(cdisplay + '.');
   }
 
   const equals = () => {
@@ -65,16 +122,15 @@ const Calculator = () => {
     calculate();
   }
 
-  const showCalculationsHistory = () => {
-    
-  }
-
-  const showTwoPreviousCalculations = () => {
-
-  }
-
   const handleNumberEvent = (data) => {
-    console.log(lastKey);
+    let dis = cdisplay.toString();
+    let index = dis.search("=");
+    if(index > -1){
+      setHistory();
+      setCdisplay(data);
+      return;
+    }
+
     if(lastKey === '=') {
       return;
     }
@@ -86,6 +142,8 @@ const Calculator = () => {
     }
   };
 
+  const showCalculationsHistory = () => {};
+
   return (
     <div className="frame">
     <div className="inner-frame">
@@ -95,8 +153,8 @@ const Calculator = () => {
       <label id="cdisplay" >{cdisplay}</label>
       <Button variant="contained" id="history" onClick={showCalculationsHistory}><HistoryIcon/></Button>
       <Button variant="contained" id="clear" onClick={clear}>AC</Button>
-      <Button variant="contained" id="multiply">*</Button>
-      <Button variant="contained" id="divide">/</Button>
+      <Button variant="contained" id="multiply" onClick={multiply}>*</Button>
+      <Button variant="contained" id="divide" onClick={divide}>/</Button>
       <Button variant="contained" id="7" onClick={() => handleNumberEvent(7)}>7</Button>
       <Button variant="contained" id="8" onClick={() => handleNumberEvent(8)}>8</Button>
       <Button variant="contained" id="9" onClick={() => handleNumberEvent(9)}>9</Button>
@@ -110,7 +168,7 @@ const Calculator = () => {
       <Button variant="contained" id="3" onClick={() => handleNumberEvent(3)}>3</Button>
       <Button variant="contained" id="backspace" onClick={deleteLast}><BackspaceIcon/></Button>
       <Button variant="contained" id="zero" onClick={() => handleNumberEvent(0)}>0</Button>
-      <Button variant="contained" id="dot">.</Button>
+      <Button variant="contained" id="dot" onClick={dot}>.</Button>
       <Button variant="contained" id="equal" onClick={equals}>=</Button>
     </div>
   </div>
